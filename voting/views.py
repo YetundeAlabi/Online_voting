@@ -29,8 +29,6 @@ from voting.models import Poll, Voter, Candidate, Vote
 
 now = timezone.now().time()
 
-def index(request):
-    return render(request, 'voting/vote-page.html')
 
 def custom_404(request, exception):
     return render(request, '404.html', status=404)
