@@ -1260,7 +1260,6 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
   .img-wrap-2 .dotted:before {
     position: absolute;
     content: "";
-    background-image: url("../images/dotted.png");
     height: 273px;
     width: 313px;
     z-index: -1;
