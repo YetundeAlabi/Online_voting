@@ -20,5 +20,5 @@ from voting import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('',include("voting.urls"))
+    path('voting/',include("voting.urls"))
 ]
