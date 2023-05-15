@@ -1,0 +1,40 @@
+{%extends "base_generic.html" %} {%load static%} {% block main %}
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Form Elements</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item">Forms</li>
+        <li class="breadcrumb-item active">Elements</li>
+      </ol>
+    </nav>
+  </div>
+<div class="card">
+ <!-- <img
+    src="{% static 'assets/img/votebg.jpg' %}" width="20" height="10px"
+    class="card-img-top"
+    alt="..."
+  /> -->
+  <div class="card-body">
+    <h5 class="card-title">{{poll.name}}</h5>
+    <p>{{poll.description}}</p>
+    <p class="card-text">
+      Polls open:<br />{{poll.start_time}} to {{poll.end_time}} on election day
+    </p>
+    <ul>{% for candidate in poll.candidates.all %}
+      <li>{{ candidate.name }}</li>
+  {% endfor %}
+  </ul>
+  <ul>
+    {% for voter in poll.voters.all %}
+      {% if not voter.is_deleted %}
+      <li> {{ voter.first_name }} <a href={% url 'voting:remove_voter' pk=poll.pk voter_pk=voter.uuid %}>delete</a> </li>
+      {% endif %}
+      {% endfor %}
+  </ul>
+  <a href="{% url 'voting:poll-result' pk=poll.id %}" class="btn btn-primary">poll result</a>
+  </div>
+</div>
+
+{%endblock%}

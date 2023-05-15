@@ -1,0 +1,53 @@
+{%extends 'vote-page.html'%}
+{%block content%}
+<div class="container">
+<div class="row justify-content-center">
+
+<form method="post" class="mb-4 mt-4"> 
+    {% csrf_token %}
+    {{now }}
+    {% if poll.start_time > now %}
+      <h1> {{ poll.name }} has not started</h1>
+      <p class="card-text">
+        Poll opens:<br />{{poll.start_time}} to {{poll.end_time}} on election day
+      </p>
+    {%else%}
+      <h3> Welcome, {{voter.first_name}} {{voter.last_name}}</h3>
+      <p> <strong>Email: </strong> {{voter.email}}</p>
+      <p>  <strong>Phone number: </strong> {{voter.phone_number}}
+
+      <h3>Current poll: {{ poll.name }}</h3>
+      <p>{{ poll.description}}</p>
+      <p>Poll is opened from <strong>{{ poll.start_time}}</strong> to <strong>{{poll.end_time}}</strong></p>
+      
+      {% for candidate in candidates %}
+        <div>
+          <input type="radio" name="candidate" value="{{ candidate.id }}">
+        <label for="candidate{{ forloop.counter }}">{{ candidate.name }}</label><br>
+        <br>
+        </div>
+      {% endfor %}
+      {%if poll.is_active%}
+        <button class="btn btn-primary" type="submit">Submit Vote</button>
+      {%else%}
+      <a href="{% url 'voting:poll-result' pk=poll.id %}" class="btn btn-primary">poll result</a>
+      {%endif%}
+    {%endif%}
+  </form>
+</div>
+</div>
+
+{%endblock%}
+
+  {% comment %} <form action="{% url 'polls:vote' question.id %}" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend><h1>{{ question.question_text }}</h1></legend>
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        {% for choice in question.choice_set.all %}
+            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+            <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+        {% endfor %}
+    </fieldset>
+    <input type="submit" value="Vote">
+    </form> {% endcomment %}

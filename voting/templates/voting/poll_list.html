@@ -1,0 +1,35 @@
+{% extends 'base_generic.html' %}
+
+{% block main %}
+
+  <main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Poll list</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item">Forms</li>
+        <li class="breadcrumb-item active">Elements</li>
+      </ol>
+    </nav>
+  <!-- End Page Title -->
+    {%for poll in poll_list%}
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"><a href="{% url 'voting:poll-detail' poll.id %}">{{ poll.name }}</a></h5>
+            <p class="card-text"><strong>Description:</strong> {{ poll.description }}</p>
+            <p class="card-text"><strong>Start Time:</strong> {{ poll.start_time }}</p>
+            <p class="card-text"><strong>End Time:</strong> {{ poll.end_time }}</p>
+            <a href="{% url 'voting:import-voters' pk=poll.id %}" class="btn btn-primary">import voter</a>
+            <a href="{% url 'voting:poll-update' pk=poll.id %}" class="btn btn-primary">Update poll</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  {%endfor%}
+</main>
+{% endblock %}

@@ -1,0 +1,25 @@
+<!-- poll_result.html -->
+
+<h1>Poll Result</h1>
+
+<p>Poll name: {{ poll.name }}</p>
+<p>Poll description: {{ poll.description}}.<br> Poll started {{poll.start_time}} to {{poll.end_time}}</p>
+
+<h2>Winner(s)</h2>
+<ul>
+  {% for candidate in winning_candidates %}
+    <li>{{ candidate.name }}</li>
+  {% empty %}
+    <li>No winner(s) found.</li>
+  {% endfor %}
+</ul>
+
+<h2>Total Votes</h2>
+<p>{{ total_votes }}</p>
+
+<h2>Candidate Votes</h2>
+<ul>
+  {% for candidate in candidates %}
+    <li>{{ candidate.name }}: {{ candidate.get_vote_count }}</li>
+  {% endfor %}
+</ul>
