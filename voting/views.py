@@ -306,7 +306,6 @@ class VoterImportView(LoginRequiredMixin, View):
 
 class PollResultView(View):
 
-
     def get(self, request, *args, **kwargs):
 
         poll = Poll.objects.get(pk=self.kwargs["pk"])
