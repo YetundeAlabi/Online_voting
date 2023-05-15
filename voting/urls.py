@@ -7,7 +7,6 @@ from .views import custom_404
 
 app_name = "voting"
 urlpatterns = [
-    path("index", views.index, name="index"),
     path('', views.login_view, name="login"),
     path('logout/', views.logout_view, name="logout"),
     path('signup/', views.SignupView.as_view(), name="signup"),
