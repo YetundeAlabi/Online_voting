@@ -269,7 +269,7 @@ class VoterImportView(LoginRequiredMixin, View):
         poll = get_object_or_404(Poll, id=poll_id)
 
         # Check if the poll is active
-        if not poll.is_active:
+        if poll.is_active:
             error_message = "Cannot import voters when the poll is active."
             messages.error(request,  "This poll is still active")
             return render(request, 'voting/import_voters.html', {'form': VoterUploadForm, 'error': error_message})
