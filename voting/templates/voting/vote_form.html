@@ -11,6 +11,7 @@
       <p class="card-text">
         Poll opens:<br />{{poll.start_time}} to {{poll.end_time}} on election day
       </p>
+      <h2>current time: {{ now }}
     {%else%}
       <h3> Welcome, {{voter.first_name}} {{voter.last_name}}</h3>
       <p> <strong>Email: </strong> {{voter.email}}</p>
@@ -26,11 +27,13 @@
         <label for="candidate{{ forloop.counter }}">{{ candidate.name }}</label><br>
         <br>
         </div>
+        
       {% endfor %}
-      {%if poll.is_active%}
-        <button class="btn btn-primary" type="submit">Submit Vote</button>
-      {%else%}
+
+      {%if poll.end_time < now %}
       <a href="{% url 'voting:poll-result' pk=poll.id %}" class="btn btn-primary">poll result</a>
+      {% else %}
+      <button class="btn btn-primary" type="submit">Submit Vote</button>
       {%endif%}
     {%endif%}
   </form>
@@ -38,16 +41,3 @@
 </div>
 
 {%endblock%}
-
-  {% comment %} <form action="{% url 'polls:vote' question.id %}" method="post">
-    {% csrf_token %}
-    <fieldset>
-        <legend><h1>{{ question.question_text }}</h1></legend>
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-        {% for choice in question.choice_set.all %}
-            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-            <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
-        {% endfor %}
-    </fieldset>
-    <input type="submit" value="Vote">
-    </form> {% endcomment %}

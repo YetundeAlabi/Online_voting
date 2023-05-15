@@ -1,9 +1,3 @@
-from django.db import models
-
-# Create your models here.
-from django.db import models
-
-# Create your models here.
 import datetime
 import uuid
 
@@ -13,15 +7,12 @@ from django.conf import settings
 from django.db.models.query import QuerySet
 from django.urls import reverse
 from phonenumber_field.modelfields import PhoneNumberField
-
-
-now = datetime.datetime.now()
-
-# Create your models here.
-
-from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from phonenumber_field.modelfields import PhoneNumberField
+
+# now = datetime.datetime.now()
+time  = timezone.now() + datetime.timedelta(hours=1)
+now = time.time()
 
 
 class UserManager(BaseUserManager):
