@@ -1,6 +1,7 @@
 from typing import Any
 import csv
 import smtplib
+from datetime import datetime, timedelta
 
 from django.forms.models import BaseModelForm
 from django.shortcuts import render
@@ -239,7 +240,8 @@ class VoteView(View):
     
     def get(self, request, *args, **kwargs):
         try:
-            now = timezone.now().time()
+            time  = timezone.now() + timedelta(hours=1)
+            now = time.time()
             print(now)
             voter = Voter.objects.get(pk=kwargs["voter_pk"])
             poll = voter.poll
