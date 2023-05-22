@@ -1,43 +1,63 @@
-{%extends 'vote-page.html'%}
+
+{%extends 'base_generic.html'%}
+{%load static%}
 {%block content%}
-<div class="container">
-<div class="row justify-content-center">
 
-<form method="post" class="mb-4 mt-4"> 
-    {% csrf_token %}
-    {{now }}
+<div class="card" >
+  <div class="card-body">
     {% if poll.start_time > now %}
-      <h1> {{ poll.name }} has not started</h1>
-      <p class="card-text">
-        Poll opens:<br />{{poll.start_time}} to {{poll.end_time}} on election day
-      </p>
-      <h2>current time: {{ now }}
-    {%else%}
-      <h3> Welcome, {{voter.first_name}} {{voter.last_name}}</h3>
-      <p> <strong>Email: </strong> {{voter.email}}</p>
-      <p>  <strong>Phone number: </strong> {{voter.phone_number}}
+    <h5 class="card-title">{{ poll.name }} has not started</h5>
+    <h6 class="card-subtitle mb-2 text-body-secondary">Description: {{ poll.description }}</h6>
+    <p class="card-text">Poll opens:<br />{{poll.start_time}} to {{poll.end_time}} on election day</p>
+    <p class="card-text">Current time: {{ now }} 
 
-      <h3>Current poll: {{ poll.name }}</h3>
-      <p>{{ poll.description}}</p>
-      <p>Poll is opened from <strong>{{ poll.start_time}}</strong> to <strong>{{poll.end_time}}</strong></p>
-      
-      {% for candidate in candidates %}
-        <div>
-          <input type="radio" name="candidate" value="{{ candidate.id }}">
-        <label for="candidate{{ forloop.counter }}">{{ candidate.name }}</label><br>
-        <br>
+    {%else%} 
+    <div class="row">
+      <div class="col-sm-6 mb-3 mb-sm-0">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Welcome!!! {{voter.first_name}} {{voter.last_name}} </h5>
+            <p class="card-text">Email: {{ voter.email }}</p>
+            <p class="card-text">Phone number: {{ voter.phone_number }}</p>
+          </div>
         </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Current poll: {{ poll.name }}</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">Description: {{ poll.description }}</h6>
+            <p class="card-text">Poll opens:<br />{{poll.start_time}} to {{poll.end_time}} on election day</p>
+          </div>
+        </div>
+      </div>
+    </div>
+      {%if poll.is_active %}
+        <form method="post" class="mb-4 mt-4"> 
+          {% csrf_token %}
+        {% for candidate in candidates %}
+          <ul class="list-group">
+            <li class="list-group-item">
+              <input class="form-check-input me-1" type="radio" name="candidate" value="{{ candidate.id }}">
+              <label class="form-check-label" for="candidate{{ forloop.counter }}">{{ candidate.name }}</label>
+            </li>
+          </ul>
+          
+        {% endfor %}
+        <button class="btn btn-primary" type="submit">Submit Vote</button>
+        </form>
         
-      {% endfor %}
-
-      {%if poll.end_time < now %}
-      <a href="{% url 'voting:poll-result' pk=poll.id %}" class="btn btn-primary">poll result</a>
-      {% else %}
-      <button class="btn btn-primary" type="submit">Submit Vote</button>
+      {%elif poll.end_time < now %}
+        <a href="{% url 'voting:poll-result' pk=poll.id %}" class="btn btn-success">Poll Result</a>
       {%endif%}
     {%endif%}
-  </form>
+  </div>
 </div>
-</div>
-
 {%endblock%}
+
+  {% comment %} <div>
+            <input type="radio" name="candidate" value="{{ candidate.id }}">
+          <label for="candidate{{ forloop.counter }}">{{ candidate.name }}</label><br>
+          <br>
+          </div> {% endcomment %}
+          

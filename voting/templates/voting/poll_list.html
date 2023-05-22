@@ -1,35 +1,36 @@
 {% extends 'base_generic.html' %}
+{% block content %}
 
-{% block main %}
+<div>
+  <p>You can view list of available polls below</p>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Title</th>
+        <th scope="col">Description</th>
+        <th scope="col">Start time</th>
+        <th scope="col">End time</th>
+        <th scope="col">Actions</th>
 
-  <main id="main" class="main">
-  <div class="pagetitle">
-    <h1>Poll list</h1>
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item">Forms</li>
-        <li class="breadcrumb-item active">Elements</li>
-      </ol>
-    </nav>
-  <!-- End Page Title -->
-    {%for poll in poll_list%}
-  <section class="section">
-    <div class="row">
-      <div class="col-lg-6">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title"><a href="{% url 'voting:poll-detail' poll.id %}">{{ poll.name }}</a></h5>
-            <p class="card-text"><strong>Description:</strong> {{ poll.description }}</p>
-            <p class="card-text"><strong>Start Time:</strong> {{ poll.start_time }}</p>
-            <p class="card-text"><strong>End Time:</strong> {{ poll.end_time }}</p>
-            <a href="{% url 'voting:import-voters' pk=poll.id %}" class="btn btn-primary">import voter</a>
-            <a href="{% url 'voting:poll-update' pk=poll.id %}" class="btn btn-primary">Update poll</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  {%endfor%}
-</main>
-{% endblock %}
+      </tr>
+    </thead>
+    <tbody>
+      {%for poll in poll_list%}
+      <tr>
+        <th scope="row">{{forloop.counter}}</th>
+        <td><a href="{% url 'voting:poll-detail' pk=poll.id %}" style="text-decoration:none">{{poll.name}}</a></td>
+        <td>{{poll.description}}</td>
+        <td>{{poll.start_time}}</td>
+        <td>{{poll.end_time}}</td>
+        <td>
+          <a href="{% url 'voting:poll-update' pk=poll.id %}" class="btn btn-primary mb-3">Update poll</a>
+          <a href="{% url 'voting:poll-delete' pk=poll.id %}" class="btn btn-danger mb-3">Delete poll</a>
+        </td>
+      </tr>
+      {%endfor%}
+    </tbody>
+  </table>
+
+</div>
+{%endblock%} 

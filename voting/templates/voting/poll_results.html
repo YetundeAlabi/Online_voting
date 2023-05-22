@@ -1,25 +1,121 @@
 <!-- poll_result.html -->
+{% extends 'base_generic.html' %} {%block content%}
+<div class="card" >
+  <div class="card-body">
+    <h4 class="card-title"> Poll Result {{ poll.name }}</h5>
+    
+    <p class="card-text">Poll description: {{ poll.description}}.<br> Poll started {{poll.start_time}} to {{poll.end_time}}</p>
+  </div>
+    
 
-<h1>Poll Result</h1>
+  <h2>Winner(s)</h2>
+  <ul>
+    {% for candidate in winning_candidates %}
+      <li>{{ candidate.name }}</li>
+    {% empty %}
+      <li>No winner(s) found.</li>
+    {% endfor %}
+  </ul>
 
-<p>Poll name: {{ poll.name }}</p>
-<p>Poll description: {{ poll.description}}.<br> Poll started {{poll.start_time}} to {{poll.end_time}}</p>
+  <h2>Total Votes</h2>
+  <p>{{ total_votes }}</p>
 
-<h2>Winner(s)</h2>
-<ul>
-  {% for candidate in winning_candidates %}
-    <li>{{ candidate.name }}</li>
-  {% empty %}
-    <li>No winner(s) found.</li>
-  {% endfor %}
-</ul>
+  <h2>Candidates</h2>
+  <canvas id="voteChart"></canvas>
+  <canvas id="barChart"></canvas>
 
-<h2>Total Votes</h2>
-<p>{{ total_votes }}</p>
+  {% comment %} {% for candidate in candidates %}
+    <div class="progress" role="progressbar" aria-label="Example 20px high" aria-valuenow="{{ candidate.get_vote_count }}" aria-valuemin="0" aria-valuemax="100" style="height: 20px">
+      {{ candidate.name }} : {{ candidate.get_vote_count }}
+      <div class="progress-bar" style="width: {{ candidate.get_vote_count}}%"></div>
+      {% endfor %}
+    </div> {% endcomment %}
+  </div>
 
-<h2>Candidate Votes</h2>
-<ul>
-  {% for candidate in candidates %}
-    <li>{{ candidate.name }}: {{ candidate.get_vote_count }}</li>
-  {% endfor %}
-</ul>
+{%endblock%}
+{% block script %} <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    new Chart(document.querySelector('#barChart'), {
+      type: 'bar',
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+          label: 'Bar Chart',
+          data: [65, 59, 80, 81, 56, 55, 40],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 205, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(201, 203, 207, 0.2)'
+          ],
+          borderColor: [
+            'rgb(255, 99, 132)',
+            'rgb(255, 159, 64)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(54, 162, 235)',
+            'rgb(153, 102, 255)',
+            'rgb(201, 203, 207)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  });
+</script> 
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var voteCounts = [];
+    var candidateNames = [];
+
+    {% for candidate in candidates %}
+      voteCounts.push({{ candidate.get_vote_count }});
+      candidateNames.push('{{ candidate.name }}');
+    {% endfor %}
+
+    var ctx = document.getElementById('voteChart').getContext('2d');
+    var chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: candidateNames,
+        datasets: [{
+          label: 'Votes',
+          data: voteCounts,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  });
+</script>
+{%endblock%}
+
+  {% comment %} <ul class="list-group">
+    {% for candidate in candidates %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      {{ candidate.name }}
+      <span class="badge bg-primary rounded-pill">{{ candidate.get_vote_count }}</span>
+    </li> {% endcomment %}
+    
+  {% comment %} </ul> {% endcomment %}

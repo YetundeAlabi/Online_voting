@@ -1,40 +1,83 @@
-{%extends "base_generic.html" %} {%load static%} {% block main %}
+{%extends "base_generic.html" %} {%load static%} {% block main%}
 <main id="main" class="main">
   <div class="pagetitle">
-    <h1>Form Elements</h1>
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item">Forms</li>
-        <li class="breadcrumb-item active">Elements</li>
+    <nav> 
+      <ol class="breadcrumb nav justify-content-end">
+        <li class="breadcrumb-item active"><a href="{% url 'voting:create-voter' pk=poll.id %}">Create Voter</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'voting:create-candidate' pk=poll.id %}">Create Candidate</a></li>
+        <li class="breadcrumb-item active"><a href="{% url 'voting:poll-list' %}">Poll List</li>
       </ol>
+      <h1>Polls</h1>
     </nav>
-  </div>
+  </div> 
+  {%endblock%}
+
+  {%block content%}
 <div class="card">
- <!-- <img
-    src="{% static 'assets/img/votebg.jpg' %}" width="20" height="10px"
-    class="card-img-top"
-    alt="..."
-  /> -->
   <div class="card-body">
-    <h5 class="card-title">{{poll.name}}</h5>
-    <p>{{poll.description}}</p>
+    <h5 class="card-title">Name: {{poll.name}}</h5>
+    <p>Description: {{poll.description}}</p>
     <p class="card-text">
-      Polls open:<br />{{poll.start_time}} to {{poll.end_time}} on election day
+      Polls open: {{poll.start_time}} to {{poll.end_time}} on election day
     </p>
-    <ul>{% for candidate in poll.candidates.all %}
-      <li>{{ candidate.name }}</li>
-  {% endfor %}
-  </ul>
-  <ul>
-    {% for voter in poll.voters.all %}
-      {% if not voter.is_deleted %}
-      <li> {{ voter.first_name }} <a href={% url 'voting:remove_voter' pk=poll.pk voter_pk=voter.uuid %}>delete</a> </li>
-      {% endif %}
+    <a href="{% url 'voting:send-email' pk=poll.id %}" class="btn btn-success">Send Email</a>
+    <br><br>
+    <h5><strong>Candidates</strong></h5>
+    {% if poll.candidates.exists %}
+    <ul class="list-group">
+      {% for candidate in poll.candidates.all %}
+      <li class="list-group-item">{{ candidate.name }}</li>
       {% endfor %}
-  </ul>
-  <a href="{% url 'voting:poll-result' pk=poll.id %}" class="btn btn-primary">poll result</a>
+    </ul>
+    {%else%}
+    <p>No candidates added yet</p>
+    {%endif%}
+   <br>
+    <a href="{% url 'voting:import-voters' pk=poll.id %}" class="btn btn-primary">Import Voter</a>
+
+    <br><br>
+
+    <div>
+      <h5><strong>Voters</strong></h5>
+      {% if poll.voters.exists %}
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">ID</th>
+              <th scope="col">Full name </th>
+              <th scope="col">Email</th>
+              <th scope="col">Phone number</th>
+              <th scope="col">Voted</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for voter in poll.voters.all %}
+              {% if not voter.is_deleted %}
+            <tr>
+              <th scope="row">{{forloop.counter}}</th>
+              <td>{{voter.uuid}}</td>
+              <td>{{voter.first_name}} {{voter.last_name}}</a></td>
+              <td>{{voter.email}}</td>
+              <td>{{voter.phone_number}}</td>
+              <td>{{voter.is_voted}}</td>
+              <td>
+                <a href="{% url 'voting:remove_voter' pk=poll.id voter_pk=voter.uuid %}" class="btn btn-danger">Remove voter</a>
+              </td>
+            </tr>
+              {% endif %}
+            {%empty%}
+              <p>No voters on this poll yet</p>
+            {%endfor%}
+        </tbody>
+      </table>
+      {%else%}
+        <p>No Voters added yet.</p>
+      {% endif %}
+    </div>
+      
+  <a href="{% url 'voting:poll-result' pk=poll.id %}" class="btn btn-success">Poll Result</a>
   </div>
 </div>
-
 {%endblock%}

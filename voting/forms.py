@@ -10,16 +10,16 @@ from django.contrib.auth.models import User
 
 now = timezone.now().time()
 
-class PollUpdateForm(forms.ModelForm):
+class PollForm(forms.ModelForm):
 
     class Meta:
         model = Poll
         fields = ["name", "description","start_time", "end_time"]
         widgets = {
-            'name': forms.TextInput(),
-            'description': forms.Textarea(),
-            'start_time': forms.TimeInput(attrs={'placeholder': 'start time'}),
-            'end_time': forms.TimeInput(attrs={'placeholder': 'end time'}),
+            'name': forms.TextInput(attrs={'class':'form-control','placeholder': 'name'}),
+            'description': forms.Textarea(attrs={'class':'form-control form-control-lg','placeholder': 'description'}),
+            'start_time': forms.TimeInput(attrs={'class':'form-control','placeholder': 'start time'}),
+            'end_time': forms.TimeInput(attrs={'class': 'form-contol' ,'placeholder': 'end time'}),
         }
 
 
